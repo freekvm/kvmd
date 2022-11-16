@@ -52,7 +52,7 @@ static unsigned long _reset_timestamp;
 #	define RESET_TIMEOUT 500000
 #endif
 
-
+#define LOG(...)		Serial.println(__VA_ARGS__)
 // -----------------------------------------------------------------------------
 static void _resetRequest() {
 	_reset_required = true;
@@ -86,6 +86,7 @@ static void _cmdClearHid(const uint8_t *_) { // 0 bytes
 
 static void _cmdKeyEvent(const uint8_t *data) { // 2 bytes
 	_out.kbd->sendKey(data[0], data[1]);
+	LOG("key ev");
 }
 
 static void _cmdMouseButtonEvent(const uint8_t *data) { // 2 bytes
@@ -100,23 +101,24 @@ static void _cmdMouseButtonEvent(const uint8_t *data) { // 2 bytes
 		MOUSE_PAIR(data[1], EXTRA_DOWN)
 	);
 #	undef MOUSE_PAIR
+	LOG("btn ev");
 }
 
 static void _cmdMouseMoveEvent(const uint8_t *data) { // 4 bytes
 	// See /kvmd/apps/otg/hid/keyboard.py for details
-	_out.mouse->sendMove(
-		PROTO::merge8_int(data[0], data[1]),
-		PROTO::merge8_int(data[2], data[3])
-	);
+	_out.mouse->sendMove(data[0], data[2]);
+	LOG("move ev");
 }
 
 static void _cmdMouseRelativeEvent(const uint8_t *data) { // 2 bytes
 	_out.mouse->sendRelative(data[0], data[1]);
+	LOG("rel ev");
 }
 
 static void _cmdMouseWheelEvent(const uint8_t *data) { // 2 bytes
 	// Y only, X is not supported
 	_out.mouse->sendWheel(data[1]);
+	LOG("wheel ev");
 }
 
 static uint8_t _handleRequest(const uint8_t *data) { // 8 bytes
