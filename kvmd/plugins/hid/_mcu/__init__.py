@@ -328,8 +328,8 @@ class BaseMcuHid(BaseHid, multiprocessing.Process):  # pylint: disable=too-many-
         logger = get_logger(0)
         logger.info("Initial HID reset and wait ...")
         self.__gpio.reset()
-        # На самом деле SPI и Serial-девайсы не пропадают, просто резет и ожидание
-        # логичнее всего делать именно здесь. Ну и на будущее, да
+        # In fact, SPI and Serial devices do not disappear, just reset and wait
+        # it's most logical to do it here. Well, for the future, yes
         for _ in range(10):
             if self.__phy.has_device():
                 logger.info("HID found")

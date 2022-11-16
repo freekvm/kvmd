@@ -56,7 +56,7 @@ class ImageInfo:
     complete: bool
 
     @classmethod
-    def from_bytes(cls, data: bytes) -> ("ImageInfo" | None):
+    def from_bytes(cls, data: bytes):
         try:
             parsed = list(struct.unpack(_IMAGE_INFO_FORMAT, data))
         except struct.error:
@@ -99,11 +99,11 @@ class DeviceInfo:
     image: (ImageInfo | None)
 
     @classmethod
-    async def read(cls, device_path: str) -> "DeviceInfo":
+    async def read(cls, device_path: str):
         return (await aiotools.run_async(cls.__inner_read, device_path))
 
     @classmethod
-    def __inner_read(cls, device_path: str) -> "DeviceInfo":
+    def __inner_read(cls, device_path: str):
         if not stat.S_ISBLK(os.stat(device_path).st_mode):
             raise RuntimeError(f"Not a block device: {device_path}")
 
